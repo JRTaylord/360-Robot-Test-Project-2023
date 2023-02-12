@@ -5,9 +5,12 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Subsystem1;
-import frc.robot.subsystems.Subsystem2;
+import frc.robot.commands.ExtendCmd;
+import frc.robot.commands.AngleCmd;
+import frc.robot.subsystems.ExtendSys;
+import frc.robot.subsystems.AngleSys;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -22,11 +25,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Subsystem1 sys1 = new Subsystem1();
-  private final Subsystem2 sys2 = new Subsystem2();
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final ExtendSys sys1 = ExtendSys.getInstance();
+  private final AngleSys sys2 = AngleSys.getInstance();
+  
   private final CommandXboxController mDriverController = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
+
+  private final ExtendCmd mExtCmd = new ExtendCmd(sys1, () -> mDriverController.getLeftY());
+  private final AngleCmd mAngleCmd = new AngleCmd(sys2, () -> mDriverController.getRightY());
+  // Replace with CommandPS4Controller or CommandJoystick if needed
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -55,6 +62,8 @@ public class RobotContainer {
   }
 
   private void setDefaultCommands() {
+    sys1.setDefaultCommand(mExtCmd);
+    sys2.setDefaultCommand(mAngleCmd);
   }
 
   /**

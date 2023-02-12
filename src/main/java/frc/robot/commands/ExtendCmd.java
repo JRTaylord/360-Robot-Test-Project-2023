@@ -4,25 +4,40 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import java.util.function.DoubleSupplier;
 
-public class Subsystem1Command extends CommandBase {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.ExtendSys;
+
+public class ExtendCmd extends CommandBase {
+  ExtendSys mExtendSys;
+  DoubleSupplier extInput;
+
   /** Creates a new Subsystem1Command. */
-  public Subsystem1Command() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public ExtendCmd(ExtendSys mExtendSys, DoubleSupplier input) {
+    this.mExtendSys = mExtendSys;
+    addRequirements(this.mExtendSys);
+    extInput = input;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double extChange = extInput.getAsDouble();
+    if (Math.abs(extChange) > 0.1) {
+      mExtendSys.adjustExtend(extChange * 0.005);
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
